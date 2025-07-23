@@ -93,46 +93,46 @@ export function UrlShortenerForm() {
 
   if (result) {
     return (
-      <Card className=\"w-full max-w-2xl mx-auto\">
+      <Card className="w-full max-w-2xl mx-auto">
         <CardHeader>
-          <CardTitle className=\"flex items-center gap-2\">
-            <Link className=\"h-5 w-5\" />
+          <CardTitle className="flex items-center gap-2">
+            <Link className="h-5 w-5" />
             Your Shortened URL
           </CardTitle>
         </CardHeader>
-        <CardContent className=\"space-y-4\">
-          <div className=\"space-y-2\">
-            <label className=\"text-sm font-medium text-gray-700\">Short URL:</label>
-            <div className=\"flex gap-2\">
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-700">Short URL:</label>
+            <div className="flex gap-2">
               <Input 
                 value={result.shortUrl} 
                 readOnly 
-                className=\"font-mono bg-gray-50\"
+                className="font-mono bg-gray-50"
               />
               <Button 
-                variant=\"outline\" 
-                size=\"icon\"
+                variant="outline" 
+                size="icon"
                 onClick={() => copyToClipboard(result.shortUrl)}
               >
-                <Copy className=\"h-4 w-4\" />
+                <Copy className="h-4 w-4" />
               </Button>
             </div>
           </div>
           
-          <div className=\"space-y-2\">
-            <label className=\"text-sm font-medium text-gray-700\">Original URL:</label>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-700">Original URL:</label>
             <Input 
               value={result.originalUrl} 
               readOnly 
-              className=\"bg-gray-50 text-sm\"
+              className="bg-gray-50 text-sm"
             />
           </div>
 
-          <div className=\"flex gap-2 pt-4\">
-            <Button onClick={createNewUrl} variant=\"outline\" className=\"flex-1\">
+          <div className="flex gap-2 pt-4">
+            <Button onClick={createNewUrl} variant="outline" className="flex-1">
               Create Another
             </Button>
-            <Button asChild className=\"flex-1\">
+            <Button asChild className="flex-1">
               <a href={`/analytics/${result.shortCode}`}>
                 View Analytics
               </a>
@@ -144,25 +144,25 @@ export function UrlShortenerForm() {
   }
 
   return (
-    <Card className=\"w-full max-w-2xl mx-auto\">
+    <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle className=\"flex items-center gap-2\">
-          <Link className=\"h-5 w-5\" />
+        <CardTitle className="flex items-center gap-2">
+          <Link className="h-5 w-5" />
           Shorten Your URL
         </CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className=\"space-y-6\">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
-              name=\"originalUrl\"
+              name="originalUrl"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>URL to Shorten</FormLabel>
                   <FormControl>
                     <Input 
-                      placeholder=\"https://example.com/very-long-url\" 
+                      placeholder="https://example.com/very-long-url" 
                       {...field} 
                     />
                   </FormControl>
@@ -173,13 +173,13 @@ export function UrlShortenerForm() {
 
             <FormField
               control={form.control}
-              name=\"customCode\"
+              name="customCode"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Custom Code (Optional)</FormLabel>
                   <FormControl>
                     <Input 
-                      placeholder=\"my-custom-link\" 
+                      placeholder="my-custom-link" 
                       {...field} 
                     />
                   </FormControl>
@@ -192,13 +192,13 @@ export function UrlShortenerForm() {
             />
 
             <Button 
-              type=\"submit\" 
-              className=\"w-full\" 
+              type="submit" 
+              className="w-full" 
               disabled={isLoading}
             >
               {isLoading ? (
                 <>
-                  <Loader2 className=\"mr-2 h-4 w-4 animate-spin\" />
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Shortening...
                 </>
               ) : (
