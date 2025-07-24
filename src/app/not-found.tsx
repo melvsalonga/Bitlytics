@@ -15,7 +15,7 @@ export default function NotFound() {
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-gray-600">
-            The short URL you're looking for doesn't exist or may have expired.
+            The short URL you&apos;re looking for doesn&apos;t exist or may have expired.
           </p>
           
           <div className="space-y-2">
