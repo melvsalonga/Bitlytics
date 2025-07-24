@@ -43,8 +43,8 @@ export async function GET(request: NextRequest, { params }: Props) {
         shortUrlId: shortUrl.id,
         country: { not: null }
       },
-      _count: true,
-      orderBy: { _count: { _all: 'desc' } },
+      _count: { id: true },
+      orderBy: { _count: { id: 'desc' } },
       take: 5
     })
 
@@ -54,8 +54,8 @@ export async function GET(request: NextRequest, { params }: Props) {
         shortUrlId: shortUrl.id,
         referrer: { not: null }
       },
-      _count: true,
-      orderBy: { _count: { _all: 'desc' } },
+      _count: { id: true },
+      orderBy: { _count: { id: 'desc' } },
       take: 5
     })
 
@@ -93,11 +93,11 @@ export async function GET(request: NextRequest, { params }: Props) {
           uniqueClicks: uniqueClicks.length,
           clicksByCountry: clicksByCountry.map(item => ({
             country: item.country,
-            clicks: item._count
+            clicks: item._count.id
           })),
           clicksByReferrer: clicksByReferrer.map(item => ({
             referrer: item.referrer,
-            clicks: item._count
+            clicks: item._count.id
           })),
           clicksByDate: clicksByDate.map(item => ({
             date: item.date,
@@ -135,13 +135,13 @@ export async function PUT(request: NextRequest, { params }: Props) {
     // TODO: Add authentication check here
     // For now, allow anyone to update (not secure for production)
 
-    const allowedUpdates = ['title', 'description', 'isActive']
+    const allowedUpdates = ['title', 'description', 'isActive'] as const
     const updates: Partial<{ title: string; description: string; isActive: boolean }> = {}
 
     // Only allow specific fields to be updated
     for (const field of allowedUpdates) {
       if (body[field] !== undefined) {
-        updates[field] = body[field]
+        (updates as any)[field] = body[field]
       }
     }
 
