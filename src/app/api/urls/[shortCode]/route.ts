@@ -136,7 +136,7 @@ export async function PUT(request: NextRequest, { params }: Props) {
     // For now, allow anyone to update (not secure for production)
 
     const allowedUpdates = ['title', 'description', 'isActive']
-    const updates: any = {}
+    const updates: Partial<{ title: string; description: string; isActive: boolean }> = {}
 
     // Only allow specific fields to be updated
     for (const field of allowedUpdates) {

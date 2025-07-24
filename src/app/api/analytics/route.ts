@@ -19,7 +19,10 @@ export async function GET(request: NextRequest) {
     const startDate = new Date(now.getTime() - (daysBack * 24 * 60 * 60 * 1000));
 
     // Base where clause
-    const whereClause: any = {
+    const whereClause: {
+      clickedAt: { gte: Date };
+      shortUrlId?: string;
+    } = {
       clickedAt: {
         gte: startDate,
       },
