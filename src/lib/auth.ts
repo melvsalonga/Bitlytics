@@ -38,33 +38,43 @@ export const authOptions: NextAuthOptions = {
       },
       from: process.env.EMAIL_FROM,
       sendVerificationRequest: async ({ identifier, url, provider }) => {
-        const { createTransport } = await import('nodemailer')
-        const transport = createTransport(provider.server)
+        if (typeof window !== 'undefined') {
+          // Skip on client-side
+          return
+        }
         
-        const result = await transport.sendMail({
-          to: identifier,
-          from: provider.from,
-          subject: 'Sign in to Bitlytics',
-          text: `Sign in to Bitlytics\n\nClick the link below to sign in:\n${url}\n\nIf you did not request this email you can safely ignore it.`,
-          html: `
-            <div style="max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;">
-              <h1 style="color: #2563eb; text-align: center;">Sign in to Bitlytics</h1>
-              <p>Click the button below to sign in to your account:</p>
-              <div style="text-align: center; margin: 30px 0;">
-                <a href="${url}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
-                  Sign In
-                </a>
+        try {
+          const nodemailer = await import('nodemailer')
+          const transport = nodemailer.createTransport(provider.server)
+          
+          const result = await transport.sendMail({
+            to: identifier,
+            from: provider.from,
+            subject: 'Sign in to Bitlytics',
+            text: `Sign in to Bitlytics\n\nClick the link below to sign in:\n${url}\n\nIf you did not request this email you can safely ignore it.`,
+            html: `
+              <div style="max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;">
+                <h1 style="color: #2563eb; text-align: center;">Sign in to Bitlytics</h1>
+                <p>Click the button below to sign in to your account:</p>
+                <div style="text-align: center; margin: 30px 0;">
+                  <a href="${url}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
+                    Sign In
+                  </a>
+                </div>
+                <p style="color: #666; font-size: 14px;">
+                  If you did not request this email you can safely ignore it.
+                </p>
               </div>
-              <p style="color: #666; font-size: 14px;">
-                If you did not request this email you can safely ignore it.
-              </p>
-            </div>
-          `,
-        })
-        
-        const failed = result.rejected.concat(result.pending).filter(Boolean)
-        if (failed.length) {
-          throw new Error(`Email(s) (${failed.join(', ')}) could not be sent`)
+            `,
+          })
+          
+          const failed = result.rejected.concat(result.pending).filter(Boolean)
+          if (failed.length) {
+            throw new Error(`Email(s) (${failed.join(', ')}) could not be sent`)
+          }
+        } catch (error) {
+          console.error('Email sending error:', error)
+          throw new Error('Failed to send verification email')
         }
       },
     }),
