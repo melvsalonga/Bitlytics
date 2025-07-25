@@ -2,8 +2,9 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useSession, signIn, signOut } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
-import { BarChart3, Home, Link as LinkIcon } from 'lucide-react'
+import { BarChart3, Home, Link as LinkIcon, User, LogOut } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export function Navigation() {
