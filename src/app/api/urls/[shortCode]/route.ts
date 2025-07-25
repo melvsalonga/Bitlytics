@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getServerSession } from 'next-auth/next'
+import { authOptions } from '@/lib/auth'
 
 interface Props {
   params: Promise<{ shortCode: string }>
@@ -132,8 +134,34 @@ export async function PUT(request: NextRequest, { params }: Props) {
     const { shortCode } = await params
     const body = await request.json()
 
-    // TODO: Add authentication check here
-    // For now, allow anyone to update (not secure for production)
+    // Check authentication
+    const session = await getServerSession(authOptions)
+    if (!session?.user?.email) {
+      return NextResponse.json(
+        { success: false, error: 'Authentication required' },
+        { status: 401 }
+      )
+    }
+
+    // Check if the URL belongs to the authenticated user
+    const existingUrl = await prisma.shortUrl.findUnique({
+      where: { shortCode },
+      include: { user: true }
+    })
+
+    if (!existingUrl) {
+      return NextResponse.json(
+        { success: false, error: 'Short URL not found' },
+        { status: 404 }
+      )
+    }
+
+    if (existingUrl.user?.email !== session.user.email) {
+      return NextResponse.json(
+        { success: false, error: 'You can only edit your own URLs' },
+        { status: 403 }
+      )
+    }
 
     const allowedUpdates = ['title', 'description', 'isActive'] as const
     const updates: Partial<{ title: string; description: string; isActive: boolean }> = {}
@@ -193,8 +221,34 @@ export async function DELETE(request: NextRequest, { params }: Props) {
   try {
     const { shortCode } = await params
 
-    // TODO: Add authentication check here
-    // For now, allow anyone to delete (not secure for production)
+    // Check authentication
+    const session = await getServerSession(authOptions)
+    if (!session?.user?.email) {
+      return NextResponse.json(
+        { success: false, error: 'Authentication required' },
+        { status: 401 }
+      )
+    }
+
+    // Check if the URL belongs to the authenticated user
+    const existingUrl = await prisma.shortUrl.findUnique({
+      where: { shortCode },
+      include: { user: true }
+    })
+
+    if (!existingUrl) {
+      return NextResponse.json(
+        { success: false, error: 'Short URL not found' },
+        { status: 404 }
+      )
+    }
+
+    if (existingUrl.user?.email !== session.user.email) {
+      return NextResponse.json(
+        { success: false, error: 'You can only delete your own URLs' },
+        { status: 403 }
+      )
+    }
 
     await prisma.shortUrl.delete({
       where: { shortCode }
