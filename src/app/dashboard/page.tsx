@@ -396,6 +396,21 @@ export default function Dashboard() {
           </div>
         </div>
       )}
+
+      {/* Edit URL Modal */}
+      {editingUrl && (
+        <EditUrlModal
+          isOpen={editModalOpen}
+          onClose={() => {
+            setEditModalOpen(false)
+            setEditingUrl(null)
+          }}
+          onSuccess={() => {
+            fetchUrls(currentPage) // Refresh the URLs list
+          }}
+          url={editingUrl}
+        />
+      )}
     </div>
   )
 }
