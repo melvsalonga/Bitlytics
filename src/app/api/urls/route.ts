@@ -15,6 +15,9 @@ const createUrlSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    // Get the current session
+    const session = await getServerSession(authOptions)
+    
     const body = await request.json()
     const validatedData = createUrlSchema.parse(body)
 
