@@ -155,16 +155,22 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
+    // Get the current session
+    const session = await getServerSession(authOptions)
+    
     const { searchParams } = new URL(request.url)
     const page = parseInt(searchParams.get('page') || '1')
     const limit = Math.min(parseInt(searchParams.get('limit') || '10'), 100)
     const skip = (page - 1) * limit
 
-    // TODO: Add user filtering when authentication is implemented
-    // For now, return all URLs (this should be restricted in production)
+    // Filter URLs by authenticated user
+    const whereClause = session?.user?.id 
+      ? { createdBy: session.user.id }
+      : { createdBy: null } // For anonymous users, show only anonymous URLs
     
     const [urls, total] = await Promise.all([
       prisma.shortUrl.findMany({
+        where: whereClause,
         skip,
         take: limit,
         orderBy: { createdAt: 'desc' },
@@ -174,7 +180,7 @@ export async function GET(request: NextRequest) {
           }
         }
       }),
-      prisma.shortUrl.count()
+      prisma.shortUrl.count({ where: whereClause })
     ])
 
     const urlsWithFullPath = urls.map(url => ({
