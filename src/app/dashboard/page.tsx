@@ -22,6 +22,7 @@ import {
   Filter
 } from 'lucide-react'
 import Link from 'next/link'
+import { EditUrlModal } from '@/components/edit-url-modal'
 
 interface ShortUrl {
   id: string
