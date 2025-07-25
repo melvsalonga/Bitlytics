@@ -57,6 +57,8 @@ export default function Dashboard() {
   const [currentPage, setCurrentPage] = useState(1)
   const [pagination, setPagination] = useState<UrlsResponse['pagination'] | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [editingUrl, setEditingUrl] = useState<ShortUrl | null>(null)
+  const [editModalOpen, setEditModalOpen] = useState(false)
 
   // Redirect to login if not authenticated
   useEffect(() => {
