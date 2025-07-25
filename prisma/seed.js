@@ -1,5 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const { nanoid } = require('nanoid');
+const bcrypt = require('bcryptjs');
 
 const prisma = new PrismaClient();
 
@@ -10,13 +11,18 @@ function generateShortCode(length = 6) {
 async function main() {
   console.log('Seeding the database...');
 
+  // Hash passwords for test users
+  const hashedPassword = await bcrypt.hash('password123', 12);
+  const hashedAdminPassword = await bcrypt.hash('admin123', 12);
+
   // Create admin user
   const adminUser = await prisma.user.create({
     data: {
       email: 'admin@bitlytics.com',
       name: 'Admin User',
+      password: hashedAdminPassword,
       role: 'ADMIN',
-      emailVerified: true,
+      emailVerified: new Date(),
       shortUrls: {
         create: [
           {
@@ -43,7 +49,8 @@ async function main() {
     data: {
       email: 'user@example.com',
       name: 'Test User',
-      emailVerified: true,
+      password: hashedPassword,
+      emailVerified: new Date(),
       shortUrls: {
         create: [
           {
