@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils'
 
 export function Navigation() {
   const pathname = usePathname()
+  const { data: session, status } = useSession()
 
   const navItems = [
     {
