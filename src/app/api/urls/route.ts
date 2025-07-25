@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
+import { getServerSession } from 'next-auth/next'
+import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { generateShortCode, isValidCustomCode, isReservedCode } from '@/lib/short-code'
 import { validateAndNormalizeUrl } from '@/lib/url-validator'
