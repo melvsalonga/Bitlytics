@@ -339,8 +339,8 @@ export default function Dashboard() {
                       variant="outline" 
                       size="sm"
                       onClick={() => {
-                        // TODO: Implement edit functionality
-                        toast.info('Edit functionality coming soon!')
+                        setEditingUrl(url)
+                        setEditModalOpen(true)
                       }}
                     >
                       <Edit className="h-4 w-4" />
