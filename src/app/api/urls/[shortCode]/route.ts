@@ -141,6 +141,7 @@ export async function PUT(request: NextRequest, { params }: Props) {
     // Only allow specific fields to be updated
     for (const field of allowedUpdates) {
       if (body[field] !== undefined) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (updates as any)[field] = body[field]
       }
     }
