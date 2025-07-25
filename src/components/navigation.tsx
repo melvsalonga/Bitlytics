@@ -26,6 +26,17 @@ export function Navigation() {
     }
   ]
 
+  // Add Dashboard link for authenticated users
+  const authenticatedNavItems = session?.user ? [
+    ...navItems,
+    {
+      href: '/dashboard',
+      label: 'Dashboard',
+      icon: User,
+      description: 'Manage your URLs'
+    }
+  ] : navItems
+
   return (
     <nav className="border-b bg-white shadow-sm">
       <div className="container mx-auto px-4">
@@ -39,9 +50,10 @@ export function Navigation() {
           <div className="flex items-center space-x-4">
             {/* Navigation Links */}
             <div className="flex items-center space-x-1">
-              {navItems.map((item) => {
+              {authenticatedNavItems.map((item) => {
                 const isActive = pathname === item.href || 
-                                (item.href === '/analytics' && pathname.startsWith('/analytics'))
+                                (item.href === '/analytics' && pathname.startsWith('/analytics')) ||
+                                (item.href === '/dashboard' && pathname.startsWith('/dashboard'))
                 
                 return (
                   <Button
