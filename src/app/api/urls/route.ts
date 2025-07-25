@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
         customCode: validatedData.customCode || null,
         title: validatedData.title || null,
         description: validatedData.description || null,
-        // createdBy: null // TODO: Add user ID when authentication is implemented
+        createdBy: session?.user?.id || null, // Associate with user if authenticated
       }
     })
 
