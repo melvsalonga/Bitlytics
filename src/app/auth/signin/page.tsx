@@ -182,15 +182,7 @@ export default function SignIn() {
                   {isSubmitting ? 'Signing in...' : 'Sign in'}
                 </Button>
                 
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full"
-                  onClick={handleEmailSignIn}
-                  disabled={emailLoading}
-                >
-                  {emailLoading ? 'Sending...' : 'Send magic link'}
-                </Button>
+                {/* Magic link temporarily disabled */}
               </div>
             </form>
           </Form>
