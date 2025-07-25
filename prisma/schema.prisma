@@ -25,7 +25,6 @@ model User {
   shortUrls     ShortUrl[]
   sessions      Session[]
   accounts      Account[]
-  VerificationToken VerificationToken[]
 }
 
 model ShortUrl {
