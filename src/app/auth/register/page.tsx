@@ -1,14 +1,17 @@
 "use client";
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { registerSchema } from '@/lib/auth-utils';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { registerSchema } from '@/lib/auth-utils'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
+import { z } from 'zod'
+
+type RegisterFormData = z.infer<typeof registerSchema>
 
 export default function Register() {
   const router = useRouter();
