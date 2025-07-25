@@ -36,30 +36,75 @@ export function Navigation() {
             <span className="text-xl font-bold text-gray-900">Bitlytics</span>
           </Link>
 
-          {/* Navigation Links */}
-          <div className="flex items-center space-x-1">
-            {navItems.map((item) => {
-              const isActive = pathname === item.href || 
-                              (item.href === '/analytics' && pathname.startsWith('/analytics'))
-              
-              return (
-                <Button
-                  key={item.href}
-                  variant={isActive ? "default" : "ghost"}
-                  size="sm"
-                  asChild
-                  className={cn(
-                    "flex items-center space-x-2",
-                    isActive && "bg-blue-600 text-white hover:bg-blue-700"
-                  )}
-                >
-                  <Link href={item.href} title={item.description}>
-                    <item.icon className="h-4 w-4" />
-                    <span className="hidden sm:inline">{item.label}</span>
-                  </Link>
-                </Button>
-              )
-            })}
+          <div className="flex items-center space-x-4">
+            {/* Navigation Links */}
+            <div className="flex items-center space-x-1">
+              {navItems.map((item) => {
+                const isActive = pathname === item.href || 
+                                (item.href === '/analytics' && pathname.startsWith('/analytics'))
+                
+                return (
+                  <Button
+                    key={item.href}
+                    variant={isActive ? "default" : "ghost"}
+                    size="sm"
+                    asChild
+                    className={cn(
+                      "flex items-center space-x-2",
+                      isActive && "bg-blue-600 text-white hover:bg-blue-700"
+                    )}
+                  >
+                    <Link href={item.href} title={item.description}>
+                      <item.icon className="h-4 w-4" />
+                      <span className="hidden sm:inline">{item.label}</span>
+                    </Link>
+                  </Button>
+                )
+              })}
+            </div>
+
+            {/* Authentication Section */}
+            <div className="flex items-center space-x-2">
+              {status === 'loading' ? (
+                <div className="w-8 h-8 animate-pulse bg-gray-200 rounded-full" />
+              ) : session?.user ? (
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm text-gray-700 hidden md:inline">
+                    {session.user.name || session.user.email}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => signOut()}
+                    className="flex items-center space-x-1"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    <span className="hidden sm:inline">Sign out</span>
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    asChild
+                  >
+                    <Link href="/auth/signin">
+                      <User className="h-4 w-4 mr-1" />
+                      Sign in
+                    </Link>
+                  </Button>
+                  <Button
+                    size="sm"
+                    asChild
+                  >
+                    <Link href="/auth/register">
+                      Sign up
+                    </Link>
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
