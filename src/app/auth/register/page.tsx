@@ -14,8 +14,8 @@ import { z } from 'zod'
 type RegisterFormData = z.infer<typeof registerSchema>
 
 export default function Register() {
-  const router = useRouter();
-  const form = useForm({
+  const router = useRouter()
+  const form = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       name: '',
@@ -23,12 +23,12 @@ export default function Register() {
       password: '',
       confirmPassword: '',
     },
-  });
+  })
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const onSubmit = async (data) => {
-    setIsSubmitting(true);
+  const onSubmit = async (data: RegisterFormData) => {
+    setIsSubmitting(true)
 
     try {
       const response = await fetch('/api/auth/register', {
@@ -37,23 +37,24 @@ export default function Register() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
-      });
+      })
 
-      const result = await response.json();
+      const result = await response.json()
 
       if (!response.ok) {
-        throw new Error(result.error || 'Failed to register');
+        throw new Error(result.error || 'Failed to register')
       }
 
-      toast.success('Registration successful! Redirecting to sign in...');
-      router.push('/auth/signin');
+      toast.success('Registration successful! Redirecting to sign in...')
+      router.push('/auth/signin')
     } catch (error) {
-      console.error('Registration error:', error);
-      toast.error(error.message || 'Registration failed');
+      console.error('Registration error:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Registration failed'
+      toast.error(errorMessage)
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
-  };
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
