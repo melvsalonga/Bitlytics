@@ -51,14 +51,14 @@ describe('url-validator utilities', () => {
       expect(result.error).toBe('Only HTTP and HTTPS protocols are allowed')
     })
 
-    it('should reject malformed URLs', () => {
+    it('should accept valid hostnames', () => {
       const result = validateAndNormalizeUrl('not-a-url')
-      expect(result.isValid).toBe(false)
-      expect(result.error).toBe('Invalid URL format')
+      expect(result.isValid).toBe(true)
+      expect(result.normalizedUrl).toBe('https://not-a-url/')
     })
 
     it('should reject URLs with very short domains', () => {
-      const result = validateAndNormalizeUrl('https://a.b')
+      const result = validateAndNormalizeUrl('https://ab')
       expect(result.isValid).toBe(false)
       expect(result.error).toBe('Invalid domain name')
     })

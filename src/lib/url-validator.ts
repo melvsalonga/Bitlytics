@@ -12,10 +12,15 @@ export function validateAndNormalizeUrl(url: string): { isValid: boolean; normal
       return { isValid: false, error: 'URL cannot be empty' }
     }
 
-    // Add protocol if missing
-    const urlWithProtocol = trimmedUrl.startsWith('http://') || trimmedUrl.startsWith('https://') 
-      ? trimmedUrl 
-      : `https://${trimmedUrl}`
+    // Check if URL already has a protocol
+    let urlWithProtocol
+    if (trimmedUrl.includes('://')) {
+      // URL has a protocol, use as-is
+      urlWithProtocol = trimmedUrl
+    } else {
+      // No protocol, add https://
+      urlWithProtocol = `https://${trimmedUrl}`
+    }
 
     // Create URL object to validate
     const urlObject = new URL(urlWithProtocol)

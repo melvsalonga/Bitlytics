@@ -36,7 +36,7 @@ const config = {
     '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }]
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(nanoid)/)',
+    'node_modules/(?!(nanoid|@next|next)/)',
   ],
   testEnvironmentOptions: {
     customExportConditions: [''],
