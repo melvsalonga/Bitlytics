@@ -12,7 +12,7 @@ const config = {
   testEnvironment: 'jsdom',
   // Add more setup options before each test is run
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  moduleNameMapping: {
+  moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   testPathIgnorePatterns: [
@@ -35,6 +35,9 @@ const config = {
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }]
   },
+  transformIgnorePatterns: [
+    'node_modules/(?!(nanoid)/)',
+  ],
   testEnvironmentOptions: {
     customExportConditions: [''],
   },

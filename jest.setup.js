@@ -39,32 +39,7 @@ process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/test'
 // Mock fetch globally
 global.fetch = jest.fn()
 
-// Mock prisma client
-jest.mock('@/lib/prisma', () => ({
-  prisma: {
-    user: {
-      findUnique: jest.fn(),
-      findMany: jest.fn(),
-      create: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-      count: jest.fn(),
-    },
-    shortUrl: {
-      findUnique: jest.fn(),
-      findMany: jest.fn(),
-      create: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-      count: jest.fn(),
-    },
-    click: {
-      create: jest.fn(),
-      findMany: jest.fn(),
-      count: jest.fn(),
-    },
-  },
-}))
+// Mock will be set up in individual test files when needed
 
 // Clear all mocks after each test
 afterEach(() => {
