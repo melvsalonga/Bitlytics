@@ -26,7 +26,7 @@ export function Navigation() {
     }
   ]
 
-  // Add Dashboard link for authenticated users
+  // Add Dashboard and Admin links for authenticated users
   const authenticatedNavItems = session?.user ? [
     ...navItems,
     {
@@ -34,7 +34,13 @@ export function Navigation() {
       label: 'Dashboard',
       icon: User,
       description: 'Manage your URLs'
-    }
+    },
+    ...(session.user.role === 'ADMIN' ? [{
+      href: '/admin',
+      label: 'Admin',
+      icon: Shield,
+      description: 'Admin panel'
+    }] : [])
   ] : navItems
 
   return (
