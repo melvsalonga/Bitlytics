@@ -59,7 +59,8 @@ export function Navigation() {
               {authenticatedNavItems.map((item) => {
                 const isActive = pathname === item.href || 
                                 (item.href === '/analytics' && pathname.startsWith('/analytics')) ||
-                                (item.href === '/dashboard' && pathname.startsWith('/dashboard'))
+                                (item.href === '/dashboard' && pathname.startsWith('/dashboard')) ||
+                                (item.href === '/admin' && pathname.startsWith('/admin'))
                 
                 return (
                   <Button
