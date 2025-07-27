@@ -95,6 +95,10 @@ export default async function RedirectPage({ params }: Props) {
     redirect(shortUrl.originalUrl)
 
   } catch (error) {
+    // Don't catch NEXT_REDIRECT errors - they are normal Next.js behavior
+    if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
+      throw error
+    }
     console.error('Error processing redirect:', error)
     notFound()
   }
