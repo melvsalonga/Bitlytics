@@ -16,7 +16,14 @@
     "test:e2e:headed": "playwright test --headed",
     "db:seed": "node prisma/seed.js",
     "db:reset": "npx prisma migrate reset --force && npm run db:seed",
-    "db:studio": "npx prisma studio"
+    "db:studio": "npx prisma studio",
+    "deploy": "bash scripts/deploy.sh",
+    "deploy:prod": "NODE_ENV=production bash scripts/deploy.sh",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:generate": "prisma generate",
+    "health-check": "curl -f http://localhost:3000/healthz || exit 1",
+    "logs": "vercel logs",
+    "setup:production": "npm ci && npm run db:generate && npm run db:migrate:deploy"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
