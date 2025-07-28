@@ -1,6 +1,7 @@
 import { redirect, notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { headers } from 'next/headers'
+import { cacheManager } from '@/lib/redis'
 
 interface Props {
   params: Promise<{ shortCode: string }>
