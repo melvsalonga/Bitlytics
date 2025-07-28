@@ -6,23 +6,29 @@ import { useSession, signIn, signOut } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
 import { BarChart3, Home, Link as LinkIcon, User, LogOut, Shield } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { AnalyticsAccessModal } from '@/components/modals/AnalyticsAccessModal'
+import { useState } from 'react'
 
 export function Navigation() {
   const pathname = usePathname()
   const { data: session, status } = useSession()
+  const [showAnalyticsModal, setShowAnalyticsModal] = useState(false)
 
   const baseNavItems = [
     {
       href: '/',
       label: 'Home',
       icon: Home,
-      description: 'Create shortened URLs'
+      description: 'Create shortened URLs',
+      requiresAuth: false
     },
     {
       href: '/analytics',
       label: 'Analytics',
       icon: BarChart3,
-      description: 'View URL performance'
+      description: 'View URL performance',
+      requiresAuth: false,
+      isAnalytics: true
     }
   ]
 
@@ -33,15 +39,25 @@ export function Navigation() {
       href: '/dashboard',
       label: 'Dashboard',
       icon: User,
-      description: 'Manage your URLs'
+      description: 'Manage your URLs',
+      requiresAuth: true
     },
     ...(session.user.role === 'ADMIN' ? [{
       href: '/admin',
       label: 'Admin',
       icon: Shield,
-      description: 'Admin panel'
+      description: 'Admin panel',
+      requiresAuth: true
     }] : [])
   ] : baseNavItems
+
+  const handleAnalyticsClick = (e: React.MouseEvent) => {
+    if (!session?.user) {
+      e.preventDefault()
+      setShowAnalyticsModal(true)
+    }
+    // If user is authenticated, the link will work normally
+  }
 
   return (
     <nav className="border-b bg-white shadow-sm">
@@ -61,6 +77,26 @@ export function Navigation() {
                                 (item.href === '/analytics' && pathname.startsWith('/analytics')) ||
                                 (item.href === '/dashboard' && pathname.startsWith('/dashboard')) ||
                                 (item.href === '/admin' && pathname.startsWith('/admin'))
+                
+                // Handle analytics link specially for anonymous users
+                if (item.isAnalytics && !session?.user) {
+                  return (
+                    <Button
+                      key={item.href}
+                      variant={isActive ? "default" : "ghost"}
+                      size="sm"
+                      onClick={() => setShowAnalyticsModal(true)}
+                      className={cn(
+                        "flex items-center space-x-2",
+                        isActive && "bg-blue-600 text-white hover:bg-blue-700"
+                      )}
+                      title={item.description}
+                    >
+                      <item.icon className="h-4 w-4" />
+                      <span className="hidden sm:inline">{item.label}</span>
+                    </Button>
+                  )
+                }
                 
                 return (
                   <Button
@@ -127,6 +163,13 @@ export function Navigation() {
           </div>
         </div>
       </div>
+      
+      {/* Analytics Access Modal */}
+      <AnalyticsAccessModal 
+        isOpen={showAnalyticsModal}
+        onClose={() => setShowAnalyticsModal(false)}
+        shortCode="" // No specific short code from navbar
+      />
     </nav>
   )
 }
