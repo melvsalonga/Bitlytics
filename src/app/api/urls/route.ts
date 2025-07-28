@@ -108,6 +108,14 @@ export async function POST(request: NextRequest) {
       }
     })
 
+    // Cache the URL immediately for fast future redirects (1 hour TTL)
+    await cacheManager.cacheUrl(
+      shortCode,
+      shortUrl.originalUrl,
+      shortUrl.createdBy,
+      3600 // 1 hour
+    )
+
     // Return success response
     return NextResponse.json({
       success: true,
