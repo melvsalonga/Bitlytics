@@ -17,18 +17,18 @@ export function Navigation() {
       label: 'Home',
       icon: Home,
       description: 'Create shortened URLs'
+    },
+    {
+      href: '/analytics',
+      label: 'Analytics',
+      icon: BarChart3,
+      description: 'View URL performance'
     }
   ]
 
   // Build navigation items based on authentication status
   const navigationItems = session?.user ? [
     ...baseNavItems,
-    {
-      href: '/analytics',
-      label: 'Analytics',
-      icon: BarChart3,
-      description: 'View URL performance'
-    },
     {
       href: '/dashboard',
       label: 'Dashboard',
