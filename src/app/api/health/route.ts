@@ -7,6 +7,9 @@ export async function GET() {
     // Check database connectivity
     const dbCheck = await prisma.$queryRaw`SELECT 1 as result`
     
+    // Check Redis connectivity
+    const redisHealth = await cacheManager.getHealthStatus()
+    
     // Get basic system stats
     const [userCount, urlCount, clickCount] = await Promise.all([
       prisma.user.count(),
@@ -15,7 +18,7 @@ export async function GET() {
     ])
 
     const health = {
-      status: 'healthy',
+      status: dbCheck && redisHealth.connected ? 'healthy' : 'degraded',
       timestamp: new Date().toISOString(),
       version: process.env.npm_package_version || '1.0.0',
       environment: process.env.NODE_ENV || 'development',
@@ -24,6 +27,11 @@ export async function GET() {
         users: userCount,
         urls: urlCount,
         clicks: clickCount
+      },
+      cache: {
+        status: redisHealth.connected ? 'connected' : 'disconnected',
+        memory: redisHealth.memory,
+        keyCount: redisHealth.keyCount
       },
       uptime: process.uptime(),
       memory: {
