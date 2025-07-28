@@ -31,13 +31,13 @@ export async function GET(request: NextRequest) {
     const whereClause: {
       clickedAt: { gte: Date };
       shortUrlId?: string;
-      shortUrl: { userId: string };
+      shortUrl: { createdBy: string };
     } = {
       clickedAt: {
         gte: startDate,
       },
       shortUrl: {
-        userId: user.id,
+        createdBy: user.id,
       },
     };
 

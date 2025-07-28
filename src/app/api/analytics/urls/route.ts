@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
     // Get all URLs owned by the authenticated user with their click counts
     const urlsWithClicks = await prisma.shortUrl.findMany({
       where: {
-        userId: user.id,
+        createdBy: user.id,
       },
       include: {
         _count: {
