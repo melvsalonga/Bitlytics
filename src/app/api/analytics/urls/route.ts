@@ -26,8 +26,11 @@ export async function GET(request: NextRequest) {
     
     const startDate = new Date(now.getTime() - (daysBack * 24 * 60 * 60 * 1000));
 
-    // Get all URLs with their click counts
+    // Get all URLs owned by the authenticated user with their click counts
     const urlsWithClicks = await prisma.shortUrl.findMany({
+      where: {
+        userId: user.id,
+      },
       include: {
         _count: {
           select: {

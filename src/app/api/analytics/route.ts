@@ -27,13 +27,17 @@ export async function GET(request: NextRequest) {
     
     const startDate = new Date(now.getTime() - (daysBack * 24 * 60 * 60 * 1000));
 
-    // Base where clause
+    // Base where clause - only include clicks for URLs owned by the authenticated user
     const whereClause: {
       clickedAt: { gte: Date };
       shortUrlId?: string;
+      shortUrl: { userId: string };
     } = {
       clickedAt: {
         gte: startDate,
+      },
+      shortUrl: {
+        userId: user.id,
       },
     };
 
