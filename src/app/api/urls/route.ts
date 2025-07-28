@@ -5,6 +5,7 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { generateShortCode, isValidCustomCode, isReservedCode } from '@/lib/short-code'
 import { validateAndNormalizeUrl } from '@/lib/url-validator'
+import { cacheManager } from '@/lib/redis'
 
 const createUrlSchema = z.object({
   originalUrl: z.string().min(1, 'URL is required').url('Invalid URL format'),
