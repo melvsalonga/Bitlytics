@@ -11,24 +11,24 @@ export function Navigation() {
   const pathname = usePathname()
   const { data: session, status } = useSession()
 
-  const navItems = [
+  const baseNavItems = [
     {
       href: '/',
       label: 'Home',
       icon: Home,
       description: 'Create shortened URLs'
-    },
+    }
+  ]
+
+  // Build navigation items based on authentication status
+  const navigationItems = session?.user ? [
+    ...baseNavItems,
     {
       href: '/analytics',
       label: 'Analytics',
       icon: BarChart3,
       description: 'View URL performance'
-    }
-  ]
-
-  // Add Dashboard and Admin links for authenticated users
-  const authenticatedNavItems = session?.user ? [
-    ...navItems,
+    },
     {
       href: '/dashboard',
       label: 'Dashboard',
@@ -41,7 +41,7 @@ export function Navigation() {
       icon: Shield,
       description: 'Admin panel'
     }] : [])
-  ] : navItems
+  ] : baseNavItems
 
   return (
     <nav className="border-b bg-white shadow-sm">
@@ -56,7 +56,7 @@ export function Navigation() {
           <div className="flex items-center space-x-4">
             {/* Navigation Links */}
             <div className="flex items-center space-x-1">
-              {authenticatedNavItems.map((item) => {
+              {navigationItems.map((item) => {
                 const isActive = pathname === item.href || 
                                 (item.href === '/analytics' && pathname.startsWith('/analytics')) ||
                                 (item.href === '/dashboard' && pathname.startsWith('/dashboard')) ||

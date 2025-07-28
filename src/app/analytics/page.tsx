@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
-import { redirect } from 'next/navigation';
 import { getAuthUser } from '@/lib/auth-utils';
 import AnalyticsDashboard from '@/components/analytics/AnalyticsDashboard';
+import AnalyticsLanding from '@/components/analytics/AnalyticsLanding';
 
 export const metadata: Metadata = {
   title: 'Analytics - Bitlytics',
@@ -13,8 +13,8 @@ export default async function AnalyticsPage() {
   const user = await getAuthUser();
   
   if (!user) {
-    // Redirect to sign in with callback URL
-    redirect('/auth/signin?callbackUrl=/analytics');
+    // Show analytics landing page for anonymous users
+    return <AnalyticsLanding />;
   }
 
   return (
