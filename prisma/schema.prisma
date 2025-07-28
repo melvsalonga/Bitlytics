@@ -48,6 +48,11 @@ model ShortUrl {
   
   @@index([shortCode])
   @@index([createdBy])
+  @@index([isActive])
+  @@index([clickCount])
+  @@index([createdAt])
+  @@index([createdBy, isActive])
+  @@index([clickCount, createdAt])
 }
 
 model Click {
