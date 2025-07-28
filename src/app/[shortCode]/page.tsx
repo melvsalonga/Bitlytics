@@ -71,32 +71,70 @@ export default async function RedirectPage({ params }: Props) {
   const ipAddress = getClientIP(headersList)
 
   try {
-    // Find the short URL in database
-    const shortUrl = await prisma.shortUrl.findUnique({
-      where: { 
-        shortCode: shortCode,
-        isActive: true // Only redirect active URLs
+    let shortUrl: any = null
+    let originalUrl: string
+    let shortUrlId: string
+
+    // Try cache first for fastest possible redirect
+    const cachedUrl = await cacheManager.getCachedUrl(shortCode)
+    
+    if (cachedUrl) {
+      // Cache hit - super fast redirect
+      originalUrl = cachedUrl.originalUrl
+      shortUrlId = shortCode // We'll need to get the actual ID for tracking
+      
+      // Get full URL data from database for tracking (but don't wait for it)
+      prisma.shortUrl.findUnique({
+        where: { shortCode: shortCode, isActive: true }
+      }).then(dbUrl => {
+        if (dbUrl) {
+          // Track the click asynchronously
+          trackClick(dbUrl.id, shortCode, {
+            userAgent,
+            ipAddress,
+            referrer
+          }).catch(console.error)
+        }
+      }).catch(console.error)
+
+      // Immediate redirect from cache
+      redirect(originalUrl)
+    } else {
+      // Cache miss - fall back to database
+      shortUrl = await prisma.shortUrl.findUnique({
+        where: { 
+          shortCode: shortCode,
+          isActive: true // Only redirect active URLs
+        }
+      })
+
+      if (!shortUrl) {
+        notFound()
       }
-    })
 
-    if (!shortUrl) {
-      notFound()
+      // Check if URL has expired (if expiration is set)
+      if (shortUrl.expiresAt && new Date() > shortUrl.expiresAt) {
+        notFound()
+      }
+
+      // Cache the URL for future requests (1 hour TTL)
+      await cacheManager.cacheUrl(
+        shortCode, 
+        shortUrl.originalUrl, 
+        shortUrl.createdBy,
+        3600 // 1 hour
+      )
+
+      // Track the click asynchronously (don't wait for it)
+      trackClick(shortUrl.id, shortCode, {
+        userAgent,
+        ipAddress,
+        referrer
+      }).catch(console.error)
+
+      // Redirect to the original URL
+      redirect(shortUrl.originalUrl)
     }
-
-    // Check if URL has expired (if expiration is set)
-    if (shortUrl.expiresAt && new Date() > shortUrl.expiresAt) {
-      notFound()
-    }
-
-    // Track the click asynchronously (don't wait for it)
-    trackClick(shortUrl.id, {
-      userAgent,
-      ipAddress,
-      referrer
-    }).catch(console.error)
-
-    // Redirect to the original URL
-    redirect(shortUrl.originalUrl)
 
   } catch (error) {
     // Don't catch NEXT_REDIRECT errors - they are normal Next.js behavior
