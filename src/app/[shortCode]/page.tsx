@@ -7,13 +7,16 @@ interface Props {
   params: Promise<{ shortCode: string }>
 }
 
-async function trackClick(shortUrlId: string, request: {
+async function trackClick(shortUrlId: string, shortCode: string, request: {
   userAgent?: string
   ipAddress: string
   referrer?: string
 }) {
   try {
-    // Create click record
+    // Increment click count in cache immediately (fast response)
+    await cacheManager.incrementClickCount(shortCode)
+
+    // Create click record asynchronously
     await prisma.click.create({
       data: {
         shortUrlId,
@@ -24,7 +27,7 @@ async function trackClick(shortUrlId: string, request: {
       }
     })
 
-    // Update click count
+    // Update click count in database
     await prisma.shortUrl.update({
       where: { id: shortUrlId },
       data: {
