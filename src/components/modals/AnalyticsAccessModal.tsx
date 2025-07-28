@@ -24,7 +24,7 @@ export function AnalyticsAccessModal({ isOpen, onClose, shortCode }: AnalyticsAc
   const router = useRouter();
 
   const handleSignIn = () => {
-    router.push(`/auth/signin?callbackUrl=/analytics/${shortCode}`);
+    router.push(`/auth/signin?callbackUrl=/analytics`);
   };
 
   const handleRegister = () => {
@@ -32,7 +32,7 @@ export function AnalyticsAccessModal({ isOpen, onClose, shortCode }: AnalyticsAc
   };
 
   const handleViewAnalytics = () => {
-    router.push(`/analytics/${shortCode}`);
+    router.push('/analytics');
     onClose();
   };
 

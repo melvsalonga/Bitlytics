@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form'
 import { toast } from 'sonner'
 import { Copy, Link, Loader2 } from 'lucide-react'
+import { AnalyticsAccessModal } from '@/components/modals/AnalyticsAccessModal'
 
 const urlFormSchema = z.object({
   originalUrl: z.string()
@@ -33,6 +34,7 @@ interface ShortenedUrlResult {
 export function UrlShortenerForm() {
   const [isLoading, setIsLoading] = useState(false)
   const [result, setResult] = useState<ShortenedUrlResult | null>(null)
+  const [showAnalyticsModal, setShowAnalyticsModal] = useState(false)
 
   const form = useForm<UrlFormData>({
     resolver: zodResolver(urlFormSchema),
@@ -132,13 +134,16 @@ export function UrlShortenerForm() {
             <Button onClick={createNewUrl} variant="outline" className="flex-1">
               Create Another
             </Button>
-            <Button asChild className="flex-1">
-              <a href={`/analytics/${result.shortCode}`}>
-                View Analytics
-              </a>
+            <Button onClick={() => setShowAnalyticsModal(true)} className="flex-1">
+              View Analytics
             </Button>
           </div>
         </CardContent>
+        <AnalyticsAccessModal 
+          isOpen={showAnalyticsModal}
+          onClose={() => setShowAnalyticsModal(false)}
+          shortCode={result.shortCode}
+        />
       </Card>
     )
   }
