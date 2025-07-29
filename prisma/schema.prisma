@@ -117,3 +117,35 @@ enum Role {
   USER
   ADMIN
 }
+
+// IP Blacklist for security
+model BlacklistedIP {
+  id          String    @id @default(cuid())
+  ipAddress   String    @unique
+  reason      String    // SPAM, ABUSE, BRUTE_FORCE, etc.
+  createdBy   String?
+  expiresAt   DateTime?
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  createdByUser User?   @relation(fields: [createdBy], references: [id])
+  
+  @@index([ipAddress])
+  @@index([isActive])
+  @@index([expiresAt])
+}
+
+// Security event logging
+model SecurityEvent {
+  id        String   @id @default(cuid())
+  type      String   // IP_BLACKLISTED, FAILED_LOGIN, RATE_LIMIT_EXCEEDED, etc.
+  ipAddress String
+  userAgent String?
+  details   Json?    // Additional event details
+  timestamp DateTime @default(now())
+  
+  @@index([type])
+  @@index([ipAddress])
+  @@index([timestamp])
+}
