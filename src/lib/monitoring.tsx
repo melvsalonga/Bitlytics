@@ -1,4 +1,5 @@
 import * as Sentry from '@sentry/nextjs'
+import React from 'react'
 
 // Custom error classes for better error tracking
 export class ValidationError extends Error {
@@ -93,24 +94,24 @@ export const analytics = {
     status: number
     userId?: string
   }) => {
-    const transaction = Sentry.startTransaction({
-      name: `${data.method} ${data.endpoint}`,
-      op: 'http',
+    Sentry.addBreadcrumb({
+      message: `API Call: ${data.method} ${data.endpoint}`,
+      category: 'http',
+      data: {
+        duration: data.duration,
+        status: data.status,
+        userId: data.userId,
+      },
+      level: 'info',
     })
-
-    transaction.setData('duration', data.duration)
-    transaction.setData('status', data.status)
-    transaction.setData('userId', data.userId)
-
-    transaction.finish()
   },
 
   // Track errors with context
-  trackError: (error: Error, context?: Record<string, any>) => {
+  trackError: (error: Error, context?: Record<string, unknown>) => {
     Sentry.withScope((scope) => {
       if (context) {
         Object.entries(context).forEach(([key, value]) => {
-          scope.setContext(key, value)
+          scope.setContext(key, value as Record<string, unknown> | null)
         })
       }
       
@@ -142,10 +143,10 @@ export const analytics = {
 // Server-side monitoring utilities
 export const monitoring = {
   // Measure function execution time
-  measureTime: async <T>(
+  measureTime: async function <T>(
     name: string,
     fn: () => Promise<T>
-  ): Promise<T> => {
+  ): Promise<T> {
     const startTime = Date.now()
     
     try {
@@ -198,27 +199,27 @@ export const monitoring = {
   },
 
   // System uptime
-  getUptime: () => {
+  getUptime: async () => {
+    const os = await import('os')
     return {
       process: Math.round(process.uptime()),
-      system: Math.round(require('os').uptime()),
+      system: Math.round(os.uptime()),
     }
   },
 }
 
 // Error boundary helper for React components
 export const withErrorBoundary = <P extends object>(
-  Component: React.ComponentType<P>,
-  fallback?: React.ComponentType<{ error: Error; resetError: () => void }>
+  Component: React.ComponentType<P>
 ) => {
   return Sentry.withErrorBoundary(Component, {
-    fallback: fallback || (({ error, resetError }) => (
+    fallback: ({ error, resetError }) => (
       <div className="flex flex-col items-center justify-center min-h-[200px] p-4">
         <h2 className="text-lg font-semibold text-gray-900 mb-2">
           Something went wrong
         </h2>
         <p className="text-gray-600 mb-4 text-center">
-          {error.message || 'An unexpected error occurred'}
+          {(error as Error).message || 'An unexpected error occurred'}
         </p>
         <button
           onClick={resetError}
@@ -227,10 +228,10 @@ export const withErrorBoundary = <P extends object>(
           Try again
         </button>
       </div>
-    )),
+    ),
     beforeCapture: (scope, error, errorInfo) => {
       scope.setTag('errorBoundary', true)
-      scope.setContext('errorInfo', errorInfo)
+      scope.setContext('errorInfo', { componentStack: errorInfo })
     },
   })
 }

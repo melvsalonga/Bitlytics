@@ -142,7 +142,6 @@ export function UrlShortenerForm() {
         <AnalyticsAccessModal 
           isOpen={showAnalyticsModal}
           onClose={() => setShowAnalyticsModal(false)}
-          shortCode={result.shortCode}
         />
       </Card>
     )

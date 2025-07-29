@@ -16,10 +16,9 @@ import { BarChart3, TrendingUp, Users, MapPin } from 'lucide-react';
 interface AnalyticsAccessModalProps {
   isOpen: boolean;
   onClose: () => void;
-  shortCode: string;
 }
 
-export function AnalyticsAccessModal({ isOpen, onClose, shortCode }: AnalyticsAccessModalProps) {
+export function AnalyticsAccessModal({ isOpen, onClose }: AnalyticsAccessModalProps) {
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -74,7 +73,7 @@ export function AnalyticsAccessModal({ isOpen, onClose, shortCode }: AnalyticsAc
             Unlock Powerful Analytics
           </DialogTitle>
           <DialogDescription className="text-base">
-            Get detailed insights into your URL's performance with advanced analytics.
+            Get detailed insights into your URL&apos;s performance with advanced analytics.
           </DialogDescription>
         </DialogHeader>
 

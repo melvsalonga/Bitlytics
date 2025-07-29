@@ -71,9 +71,8 @@ export default async function RedirectPage({ params }: Props) {
   const ipAddress = getClientIP(headersList)
 
   try {
-    let shortUrl: any = null
+let shortUrl: Awaited<ReturnType<typeof prisma.shortUrl.findUnique>> = null
     let originalUrl: string
-    let shortUrlId: string
 
     // Try cache first for fastest possible redirect
     const cachedUrl = await cacheManager.getCachedUrl(shortCode)
@@ -81,7 +80,6 @@ export default async function RedirectPage({ params }: Props) {
     if (cachedUrl) {
       // Cache hit - super fast redirect
       originalUrl = cachedUrl.originalUrl
-      shortUrlId = shortCode // We'll need to get the actual ID for tracking
       
       // Get full URL data from database for tracking (but don't wait for it)
       prisma.shortUrl.findUnique({
@@ -121,7 +119,7 @@ export default async function RedirectPage({ params }: Props) {
       await cacheManager.cacheUrl(
         shortCode, 
         shortUrl.originalUrl, 
-        shortUrl.createdBy,
+        shortUrl.createdBy || undefined,
         3600 // 1 hour
       )
 

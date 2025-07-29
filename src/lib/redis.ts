@@ -12,7 +12,6 @@ function createRedisConnection(): Redis {
   if (redisUrl) {
     // Use Redis URL (for production environments like Redis Cloud)
     return new Redis(redisUrl, {
-      retryDelayOnFailover: 100,
       maxRetriesPerRequest: 3,
       lazyConnect: true,
       connectTimeout: 10000,
@@ -25,7 +24,6 @@ function createRedisConnection(): Redis {
     host: process.env.REDIS_HOST || 'localhost',
     port: parseInt(process.env.REDIS_PORT || '6379'),
     password: process.env.REDIS_PASSWORD,
-    retryDelayOnFailover: 100,
     maxRetriesPerRequest: 3,
     lazyConnect: true,
     connectTimeout: 10000,
@@ -112,7 +110,7 @@ export class CacheManager {
   /**
    * Cache analytics data for quick access
    */
-  async cacheAnalytics(key: string, data: any, ttl: number = 300): Promise<void> {
+  async cacheAnalytics(key: string, data: unknown, ttl: number = 300): Promise<void> {
     try {
       await this.redis.setex(
         `analytics:${key}`,
@@ -127,7 +125,7 @@ export class CacheManager {
   /**
    * Get cached analytics data
    */
-  async getCachedAnalytics(key: string): Promise<any | null> {
+  async getCachedAnalytics(key: string): Promise<unknown | null> {
     try {
       const cached = await this.redis.get(`analytics:${key}`);
       if (cached) {
@@ -168,7 +166,7 @@ export class CacheManager {
   /**
    * Cache popular URLs for quick access
    */
-  async cachePopularUrls(urls: any[], ttl: number = 600): Promise<void> {
+  async cachePopularUrls(urls: unknown[], ttl: number = 600): Promise<void> {
     try {
       await this.redis.setex(
         'popular:urls',
@@ -183,7 +181,7 @@ export class CacheManager {
   /**
    * Get cached popular URLs
    */
-  async getCachedPopularUrls(): Promise<any[] | null> {
+  async getCachedPopularUrls(): Promise<unknown[] | null> {
     try {
       const cached = await this.redis.get('popular:urls');
       if (cached) {

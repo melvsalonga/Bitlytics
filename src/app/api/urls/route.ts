@@ -112,7 +112,7 @@ export async function POST(request: NextRequest) {
     await cacheManager.cacheUrl(
       shortCode,
       shortUrl.originalUrl,
-      shortUrl.createdBy,
+      shortUrl.createdBy || undefined,
       3600 // 1 hour
     )
 

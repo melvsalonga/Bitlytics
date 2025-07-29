@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useSession, signIn, signOut } from 'next-auth/react'
+import { useSession, signOut } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
 import { BarChart3, Home, Link as LinkIcon, User, LogOut, Shield } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -51,13 +51,6 @@ export function Navigation() {
     }] : [])
   ] : baseNavItems
 
-  const handleAnalyticsClick = (e: React.MouseEvent) => {
-    if (!session?.user) {
-      e.preventDefault()
-      setShowAnalyticsModal(true)
-    }
-    // If user is authenticated, the link will work normally
-  }
 
   return (
     <nav className="border-b bg-white shadow-sm">
@@ -168,7 +161,6 @@ export function Navigation() {
       <AnalyticsAccessModal 
         isOpen={showAnalyticsModal}
         onClose={() => setShowAnalyticsModal(false)}
-        shortCode="" // No specific short code from navbar
       />
     </nav>
   )

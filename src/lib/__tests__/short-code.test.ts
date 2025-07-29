@@ -1,4 +1,5 @@
 import { generateShortCode, isValidCustomCode, isReservedCode } from '../short-code'
+import { nanoid } from 'nanoid'
 
 // Mock nanoid
 jest.mock('nanoid', () => ({
@@ -20,7 +21,6 @@ describe('short-code utilities', () => {
     })
 
     it('should call nanoid function', () => {
-      const { nanoid } = require('nanoid')
       generateShortCode()
       expect(nanoid).toHaveBeenCalled()
     })

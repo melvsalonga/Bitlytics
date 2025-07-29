@@ -58,7 +58,7 @@ describe('/api/urls', () => {
     it('should create a short URL with custom code', async () => {
       mockGetServerSession.mockResolvedValue({
         user: { id: 'user1', email: 'test@example.com' }
-      } as any)
+      } as Record<string, unknown>)
       mockPrisma.shortUrl.findUnique.mockResolvedValue(null)
       mockPrisma.shortUrl.create.mockResolvedValue({
         id: '1',
@@ -212,7 +212,7 @@ describe('/api/urls', () => {
     it('should return paginated URLs for authenticated user', async () => {
       mockGetServerSession.mockResolvedValue({
         user: { id: 'user1', email: 'test@example.com' }
-      } as any)
+      } as Record<string, unknown>)
 
       const mockUrls = [
         {
@@ -231,7 +231,7 @@ describe('/api/urls', () => {
         }
       ]
 
-      mockPrisma.shortUrl.findMany.mockResolvedValue(mockUrls as any)
+      mockPrisma.shortUrl.findMany.mockResolvedValue(mockUrls as Record<string, unknown>[])
       mockPrisma.shortUrl.count.mockResolvedValue(1)
 
       const request = new NextRequest('http://localhost:3000/api/urls?page=1&limit=10')
@@ -269,7 +269,7 @@ describe('/api/urls', () => {
     it('should handle pagination parameters', async () => {
       mockGetServerSession.mockResolvedValue({
         user: { id: 'user1', email: 'test@example.com' }
-      } as any)
+      } as Record<string, unknown>)
       mockPrisma.shortUrl.findMany.mockResolvedValue([])
       mockPrisma.shortUrl.count.mockResolvedValue(25)
 

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, Suspense } from 'react'
-import { signIn, getSession } from 'next-auth/react'
+import { signIn } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { loginSchema } from '@/lib/auth-utils'
@@ -31,7 +31,6 @@ function SignInForm() {
   })
 
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [emailLoading, setEmailLoading] = useState(false)
 
   const onSubmit = async (data: LoginFormData) => {
     setIsSubmitting(true)
@@ -59,34 +58,6 @@ function SignInForm() {
     }
   }
 
-  const handleEmailSignIn = async () => {
-    const email = form.getValues('email')
-    if (!email) {
-      toast.error('Please enter your email address')
-      return
-    }
-
-    setEmailLoading(true)
-    try {
-      const result = await signIn('email', {
-        email,
-        redirect: false,
-        callbackUrl,
-      })
-
-      if (result?.error) {
-        toast.error('Failed to send email. Please try again.')
-        return
-      }
-
-      toast.success('Check your email for a sign-in link!')
-    } catch (error) {
-      console.error('Email sign in error:', error)
-      toast.error('Something went wrong. Please try again.')
-    } finally {
-      setEmailLoading(false)
-    }
-  }
 
   const handleOAuthSignIn = async (provider: string) => {
     try {
