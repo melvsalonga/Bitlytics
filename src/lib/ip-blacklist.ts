@@ -241,7 +241,7 @@ async function logSecurityEvent(event: SecurityEvent): Promise<void> {
         type: event.type,
         ipAddress: event.ipAddress,
         userAgent: event.userAgent,
-        details: event.details as any,
+        details: event.details ? JSON.parse(JSON.stringify(event.details)) : null,
         timestamp: new Date(),
       }
     })

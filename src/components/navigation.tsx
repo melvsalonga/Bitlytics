@@ -67,9 +67,9 @@ export function Navigation() {
             <div className="flex items-center space-x-1">
               {navigationItems.map((item) => {
                 const isActive = pathname === item.href || 
-                                (item.href === '/analytics' && pathname.startsWith('/analytics')) ||
-                                (item.href === '/dashboard' && pathname.startsWith('/dashboard')) ||
-                                (item.href === '/admin' && pathname.startsWith('/admin'))
+                                (item.href === '/analytics' && pathname?.startsWith('/analytics')) ||
+                                (item.href === '/dashboard' && pathname?.startsWith('/dashboard')) ||
+                                (item.href === '/admin' && pathname?.startsWith('/admin'))
                 
                 // Handle analytics link specially for anonymous users
                 if (item.isAnalytics && !session?.user) {

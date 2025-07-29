@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Ratelimit } from '@upstash/ratelimit'
-import Redis from 'ioredis'
+import { Redis } from '@upstash/redis'
 
 // Create Redis instance for rate limiting
 const redis = new Redis({
-  host: process.env.REDIS_HOST || 'localhost',
-  port: parseInt(process.env.REDIS_PORT || '6379'),
-  password: process.env.REDIS_PASSWORD,
-  maxRetriesPerRequest: 0, // Don't retry if Redis is down
+  url: process.env.UPSTASH_REDIS_REST_URL || `redis://${process.env.REDIS_HOST || 'localhost'}:${process.env.REDIS_PORT || '6379'}`,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN || process.env.REDIS_PASSWORD || '',
 })
 
 // Different rate limiters for different endpoints
@@ -68,7 +66,7 @@ export async function checkRateLimit(
       success,
       limit,
       remaining,
-      reset,
+      reset: new Date(reset),
     }
   } catch (error) {
     console.error('Rate limiting error:', error)

@@ -1,6 +1,6 @@
-const rateLimit = require('express-rate-limit');
-const helmet = require('helmet');
-const cors = require('cors');
+import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
+import cors from 'cors';
 
 const rateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -10,7 +10,7 @@ const rateLimiter = rateLimit({
   },
 });
 
-module.exports = (req, res, next) => {
+export default (req, res, next) => {
   helmet()(req, res, () => {
     cors()(req, res, () => {
       rateLimiter(req, res, next);

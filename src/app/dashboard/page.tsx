@@ -50,7 +50,7 @@ interface UrlsResponse {
 }
 
 export default function Dashboard() {
-  const { data: session, status } = useSession()
+  const { status } = useSession()
   const router = useRouter()
   const [urls, setUrls] = useState<ShortUrl[]>([])
   const [loading, setLoading] = useState(true)

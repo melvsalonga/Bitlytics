@@ -20,7 +20,7 @@ type LoginFormData = z.infer<typeof loginSchema>
 function SignInForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || '/'
+  const callbackUrl = searchParams?.get('callbackUrl') || '/'
   
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),

@@ -1,38 +1,29 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Badge } from '@/components/ui/badge'
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
+  AreaChart,
+  Area,
   BarChart,
   Bar,
   PieChart,
   Pie,
   Cell,
-  Legend,
-  Area,
-  AreaChart,
-} from 'recharts';
-import { 
-  TrendingUp, 
-  Users, 
-  MousePointer, 
-  Globe, 
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+} from 'recharts'
+import {
+  MousePointer,
+  TrendingUp,
+  Users,
   ExternalLink,
-  Clock,
-  Smartphone,
-  Monitor,
-  Tablet
 } from 'lucide-react';
 
 interface AnalyticsData {
@@ -72,11 +63,6 @@ export default function AnalyticsDashboard() {
   const [selectedUrl, setSelectedUrl] = useState<string>('all');
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchAnalyticsData();
-    fetchUrlsData();
-  }, [timeRange]);
-
   const fetchAnalyticsData = async () => {
     try {
       const response = await fetch(`/api/analytics?timeRange=${timeRange}`);
@@ -103,6 +89,11 @@ export default function AnalyticsDashboard() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchAnalyticsData();
+    fetchUrlsData();
+  }, [timeRange]);
 
   const getSelectedUrlData = () => {
     if (selectedUrl === 'all' || !selectedUrl) return null;

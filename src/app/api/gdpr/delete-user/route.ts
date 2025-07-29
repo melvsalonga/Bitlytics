@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
-export async function DELETE(request: NextRequest) {
+export async function DELETE(_request: NextRequest) {
   try {
     // Check authentication
     const session = await getServerSession(authOptions)
@@ -99,7 +99,7 @@ export async function DELETE(request: NextRequest) {
 }
 
 // Export user data for GDPR compliance
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
@@ -198,5 +198,5 @@ export async function GET(request: NextRequest) {
 // Simple hash function for IP addresses in exports
 function hashIP(ip: string): string {
   // Simple hash to anonymize IP while keeping some structure
-  return `${ip.split('.').map(part => 'xxx').join('.')}`
+  return `${ip.split('.').map(_part => 'xxx').join('.')}`
 }
